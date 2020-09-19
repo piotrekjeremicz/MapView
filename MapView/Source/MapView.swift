@@ -16,12 +16,20 @@ public class MapView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .clear
-        addSubview(mapView)
+        setupView()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        
+        setupView()
+    }
+    
+    private func setupView() {
+        backgroundColor = .clear
+        
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(mapView)
     }
     
     private var didUpdateConstraints = false
@@ -37,5 +45,7 @@ public class MapView: UIView {
                 mapView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
             ])
         }
+        
+        super.updateConstraints()
     }
 }
