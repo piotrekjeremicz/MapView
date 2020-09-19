@@ -9,17 +9,24 @@
 import UIKit
 import MapKit
 
-class MapView: UIView {
+public class MapView: UIView {
     
     private let mapView = MKMapView(frame: .zero)
     
     init() {
+        super.init(frame: .zero)
         
+        backgroundColor = .clear
+        addSubview(mapView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private var didUpdateConstraints = false
     
-    override func updateConstraints() {
+    public override func updateConstraints() {
         if !didUpdateConstraints {
             didUpdateConstraints = true
             
