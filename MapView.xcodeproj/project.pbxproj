@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		240F93AB252E2A81000D9E28 /* MapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93AA252E2A81000D9E28 /* MapStyle.swift */; };
+		240F93AF252E5C8C000D9E28 /* GoogleMapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */; };
+		240F93BF252F003E000D9E28 /* TemplateUrlMapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */; };
 		OBJ_24 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MapView.swift */; };
 		OBJ_31 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		240F93AA252E2A81000D9E28 /* MapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStyle.swift; sourceTree = "<group>"; };
+		240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapStyle.swift; sourceTree = "<group>"; };
+		240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateUrlMapStyle.swift; sourceTree = "<group>"; };
 		"MapView::MapView::Product" /* MapView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_17 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		OBJ_18 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -30,6 +36,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		240F939A252DFA99000D9E28 /* MapStyle */ = {
+			isa = PBXGroup;
+			children = (
+				240F93AA252E2A81000D9E28 /* MapStyle.swift */,
+				240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */,
+				240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */,
+			);
+			name = MapStyle;
+			sourceTree = "<group>";
+		};
 		OBJ_14 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -38,7 +54,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -47,13 +63,13 @@
 				OBJ_17 /* LICENSE */,
 				OBJ_18 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* MapView.swift */,
+				240F939A252DFA99000D9E28 /* MapStyle */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -107,7 +123,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -123,6 +139,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				240F93AF252E5C8C000D9E28 /* GoogleMapStyle.swift in Sources */,
+				240F93AB252E2A81000D9E28 /* MapStyle.swift in Sources */,
+				240F93BF252F003E000D9E28 /* TemplateUrlMapStyle.swift in Sources */,
 				OBJ_24 /* MapView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

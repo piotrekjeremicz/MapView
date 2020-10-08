@@ -11,15 +11,19 @@ import MapKit
 
 public class MapView: UIView {
     
+    public var style: MapStyle = SystemMapStyle() {
+        didSet { setupMap() }
+    }
+    
     private let mapView = MKMapView(frame: .zero)
     
-    init() {
+    public init() {
         super.init(frame: .zero)
         
         setupView()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setupView()
@@ -28,8 +32,16 @@ public class MapView: UIView {
     private func setupView() {
         backgroundColor = .clear
         
+        mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        
         addSubview(mapView)
+    }
+    
+    private func setupMap() {
+        if !(style is SystemMapStyle) {
+            mapView.addOverlay(style.tileOverlay)
+        }
     }
     
     private var didUpdateConstraints = false
@@ -47,5 +59,15 @@ public class MapView: UIView {
         }
         
         super.updateConstraints()
+    }
+}
+
+extension MapView: MKMapViewDelegate {
+    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let tileOverlay = overlay as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        } else {
+            return MKOverlayRenderer(overlay: overlay)
+        }
     }
 }
