@@ -11,37 +11,33 @@ import MapKit
 
 public class MapView: UIView {
     
-    public var style: MapStyle = SystemMapStyle() {
-        didSet { setupMap() }
+    public var zoomLevel: Int {
+        get {
+            zoomTileOverlay.zoomLevel
+        }
     }
     
+    public var style: MapStyle = SystemMapStyle() {
+        didSet { setupTileOverlays() }
+    }
+    
+    private var tileOverlayTag = 1
+    private var tileOverlayGroup: TileOverlayGroup? = nil
+    
     private let mapView = MKMapView(frame: .zero)
+    private let zoomTileOverlay = ZoomTileOverlay()
     
     public init() {
         super.init(frame: .zero)
         
         setupView()
+        setupGestureRecognizers()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setupView()
-    }
-    
-    private func setupView() {
-        backgroundColor = .clear
-        
-        mapView.delegate = self
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(mapView)
-    }
-    
-    private func setupMap() {
-        if !(style is SystemMapStyle) {
-            mapView.addOverlay(style.tileOverlay)
-        }
     }
     
     private var didUpdateConstraints = false
@@ -62,12 +58,51 @@ public class MapView: UIView {
     }
 }
 
+extension MapView {
+    private func setupView() {
+        backgroundColor = .clear
+        
+        mapView.delegate = self
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(mapView)
+    }
+    
+    private func setupGestureRecognizers() {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGestureRecognizerAction(_:)))
+        pinchGestureRecognizer.delegate = self
+        
+        mapView.addGestureRecognizer(pinchGestureRecognizer)
+    }
+    
+    private func setupTileOverlays() {
+        mapView.addOverlay(zoomTileOverlay)
+        if !(style is SystemMapStyle) {
+            mapView.addOverlay(style.tileOverlay)
+        }
+    }
+}
+
+extension MapView {
+    @objc func pinchGestureRecognizerAction(_ sender: UIPinchGestureRecognizer) {
+        print(zoomLevel)
+    }
+}
+
 extension MapView: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let tileOverlay = overlay as? MKTileOverlay {
+        if let tileOverlay = overlay as? TileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        } else if let tileOverlay = overlay as? ZoomTileOverlay {
             return MKTileOverlayRenderer(tileOverlay: tileOverlay)
         } else {
             return MKOverlayRenderer(overlay: overlay)
         }
+    }
+}
+
+extension MapView: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
