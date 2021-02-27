@@ -21,9 +21,6 @@ public class MapView: UIView {
         didSet { setupTileOverlays() }
     }
     
-    private var tileOverlayTag = 1
-    private var tileOverlayGroup: TileOverlayGroup? = nil
-    
     private let mapView = MKMapView(frame: .zero)
     private let zoomTileOverlay = ZoomTileOverlay()
     
@@ -38,6 +35,7 @@ public class MapView: UIView {
         super.init(coder: coder)
         
         setupView()
+        setupGestureRecognizers()
     }
     
     private var didUpdateConstraints = false

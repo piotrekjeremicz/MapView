@@ -7,22 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		240F93AB252E2A81000D9E28 /* MapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93AA252E2A81000D9E28 /* MapStyle.swift */; };
-		240F93AF252E5C8C000D9E28 /* GoogleMapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */; };
-		240F93BF252F003E000D9E28 /* TemplateUrlMapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */; };
-		OBJ_24 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MapView.swift */; };
+		248DC8C425EA575900249B1A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248DC8C325EA575900249B1A /* MapView.swift */; };
+		248DC8CC25EA578100249B1A /* MapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248DC8CB25EA578100249B1A /* MapStyle.swift */; };
+		248DC8D025EA579500249B1A /* GoogleMapStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248DC8CF25EA579500249B1A /* GoogleMapStyle.swift */; };
+		248DC8D625EA57A700249B1A /* TileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248DC8D425EA57A700249B1A /* TileOverlay.swift */; };
+		248DC8D725EA57A700249B1A /* ZoomTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248DC8D525EA57A700249B1A /* ZoomTileOverlay.swift */; };
 		OBJ_31 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		240F93AA252E2A81000D9E28 /* MapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStyle.swift; sourceTree = "<group>"; };
-		240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapStyle.swift; sourceTree = "<group>"; };
-		240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateUrlMapStyle.swift; sourceTree = "<group>"; };
+		248DC8C325EA575900249B1A /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapView.swift; path = Sources/MapView.swift; sourceTree = "<group>"; };
+		248DC8CB25EA578100249B1A /* MapStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapStyle.swift; path = Sources/Style/MapStyle.swift; sourceTree = "<group>"; };
+		248DC8CF25EA579500249B1A /* GoogleMapStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GoogleMapStyle.swift; path = "Sources/Style/Google Style/GoogleMapStyle.swift"; sourceTree = "<group>"; };
+		248DC8D425EA57A700249B1A /* TileOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TileOverlay.swift; path = Sources/Elements/TileOverlay.swift; sourceTree = "<group>"; };
+		248DC8D525EA57A700249B1A /* ZoomTileOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZoomTileOverlay.swift; path = Sources/Elements/ZoomTileOverlay.swift; sourceTree = "<group>"; };
 		"MapView::MapView::Product" /* MapView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_17 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		OBJ_18 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		OBJ_9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapView.swift; path = Sources/MapView/MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,14 +38,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		240F939A252DFA99000D9E28 /* MapStyle */ = {
+		240F939A252DFA99000D9E28 /* Style */ = {
 			isa = PBXGroup;
 			children = (
-				240F93AA252E2A81000D9E28 /* MapStyle.swift */,
-				240F93AE252E5C8C000D9E28 /* GoogleMapStyle.swift */,
-				240F93BE252F003E000D9E28 /* TemplateUrlMapStyle.swift */,
+				248DC8D325EA579800249B1A /* Google */,
+				248DC8CB25EA578100249B1A /* MapStyle.swift */,
 			);
-			name = MapStyle;
+			name = Style;
+			sourceTree = "<group>";
+		};
+		248DC8D325EA579800249B1A /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				248DC8CF25EA579500249B1A /* GoogleMapStyle.swift */,
+			);
+			name = Google;
+			sourceTree = "<group>";
+		};
+		24AB7773257AC4A500EE07C0 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				248DC8D425EA57A700249B1A /* TileOverlay.swift */,
+				248DC8D525EA57A700249B1A /* ZoomTileOverlay.swift */,
+			);
+			name = Elements;
 			sourceTree = "<group>";
 		};
 		OBJ_14 /* Products */ = {
@@ -68,8 +86,9 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_9 /* MapView.swift */,
-				240F939A252DFA99000D9E28 /* MapStyle */,
+				248DC8C325EA575900249B1A /* MapView.swift */,
+				240F939A252DFA99000D9E28 /* Style */,
+				24AB7773257AC4A500EE07C0 /* Elements */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -115,6 +134,11 @@
 			attributes = {
 				LastSwiftMigration = 9999;
 				LastUpgradeCheck = 9999;
+				TargetAttributes = {
+					"MapView::MapView" = {
+						DevelopmentTeam = L5YDW69UDM;
+					};
+				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "MapView" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -139,10 +163,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				240F93AF252E5C8C000D9E28 /* GoogleMapStyle.swift in Sources */,
-				240F93AB252E2A81000D9E28 /* MapStyle.swift in Sources */,
-				240F93BF252F003E000D9E28 /* TemplateUrlMapStyle.swift in Sources */,
-				OBJ_24 /* MapView.swift in Sources */,
+				248DC8D725EA57A700249B1A /* ZoomTileOverlay.swift in Sources */,
+				248DC8D025EA579500249B1A /* GoogleMapStyle.swift in Sources */,
+				248DC8CC25EA578100249B1A /* MapStyle.swift in Sources */,
+				248DC8C425EA575900249B1A /* MapView.swift in Sources */,
+				248DC8D625EA57A700249B1A /* TileOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +185,9 @@
 		OBJ_21 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L5YDW69UDM;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -190,6 +218,9 @@
 		OBJ_22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L5YDW69UDM;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
