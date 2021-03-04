@@ -7,24 +7,24 @@
 
 import MapKit
 
-class GoogleMapStyle: MapStyle {
+final private class GoogleMapStyle: MapStyle {
     
     private let jsonFileUrl: URL?
     private let templateUrl: String?
     
     private let baseUrl = URL(string: "https://mts0.google.com/vt/lyrs=m@289000001&hl=en&src=app&x={x}&y={y}&z={z}&s=DGal")
     
-    init(json url: URL) {
+    public init(json url: URL) {
         templateUrl = nil
         jsonFileUrl = url
     }
     
-    init(template path: String) {
+    public init(template path: String) {
         jsonFileUrl = nil
         templateUrl = path
     }
     
-    var urlTemplate: String? {
+    public var urlTemplate: String? {
         if let url = templateUrl {
             return url
         } else if let jsonUrl = jsonFileUrl, let baseUrl = baseUrl  {

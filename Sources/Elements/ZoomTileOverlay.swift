@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class ZoomTileOverlay: MKTileOverlay {
+final internal class ZoomTileOverlay: MKTileOverlay {
     
     public var zoomLevel: Int = 0
     

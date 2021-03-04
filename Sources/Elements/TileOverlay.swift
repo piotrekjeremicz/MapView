@@ -49,7 +49,7 @@ public class TileOverlay: MKTileOverlay {
         }
         
         let tileUrl = url(forTilePath: path)
-        print(tileUrl)
+
         if let cachedData = cache.object(forKey: tileUrl as NSURL) as Data? {
             result(cachedData, nil)
         } else {

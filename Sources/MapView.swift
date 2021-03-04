@@ -12,9 +12,12 @@ import MapKit
 public class MapView: UIView {
     
     public var zoomLevel: Int {
-        get {
-            zoomTileOverlay.zoomLevel
-        }
+        get { zoomTileOverlay.zoomLevel }
+    }
+    
+    public var type: MKMapType {
+        get { style.type }
+        set { style.type = newValue }
     }
     
     public var style: MapStyle = SystemMapStyle() {
@@ -28,14 +31,12 @@ public class MapView: UIView {
         super.init(frame: .zero)
         
         setupView()
-        setupGestureRecognizers()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setupView()
-        setupGestureRecognizers()
     }
     
     private var didUpdateConstraints = false
@@ -66,26 +67,16 @@ extension MapView {
         addSubview(mapView)
     }
     
-    private func setupGestureRecognizers() {
-        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGestureRecognizerAction(_:)))
-        pinchGestureRecognizer.delegate = self
-        
-        mapView.addGestureRecognizer(pinchGestureRecognizer)
-    }
-    
     private func setupTileOverlays() {
         mapView.addOverlay(zoomTileOverlay)
-        if !(style is SystemMapStyle) {
+        if let style = style as? SystemMapStyle {
+            mapView.mapType = style.type
+        } else {
             mapView.addOverlay(style.tileOverlay)
         }
     }
 }
 
-extension MapView {
-    @objc func pinchGestureRecognizerAction(_ sender: UIPinchGestureRecognizer) {
-        print(zoomLevel)
-    }
-}
 
 extension MapView: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
