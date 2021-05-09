@@ -19,7 +19,7 @@ final internal class ZoomTileOverlay: MKTileOverlay {
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
         zoomLevel = path.z
-        return URL(string: "http://www.example.com/")!
+        return URL(string: "http://www.example.com?x={x}&y={y}&z={z}")!
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
