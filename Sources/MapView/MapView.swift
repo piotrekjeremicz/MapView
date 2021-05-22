@@ -104,8 +104,8 @@ public class MapView: UIView {
     }
 }
 
-extension MapView {
-    private func setupView() {
+private extension MapView {
+    func setupView() {
         backgroundColor = .clear
         
         mapView.delegate = self
@@ -114,18 +114,70 @@ extension MapView {
         addSubview(mapView)
     }
     
-    private func setupTileOverlays() {
-        mapView.addOverlay(zoomTileOverlay)
+    func setupTileOverlays() {
+        if !mapView.overlays.contains(where: { $0 is ZoomTileOverlay }) { mapView.addOverlay(zoomTileOverlay) }
+        
         if let style = style as? SystemMapStyle {
             mapView.mapType = style.type
         } else {
+            mapView.removeOverlays(mapView.overlays.filter({ $0 is TileOverlay }))
             mapView.addOverlay(style.tileOverlay)
         }
     }
+    
+    func getAnnotations() -> [Annotation] {
+        var annotations: [Annotation] = []
+        
+        privateLayers.forEach { layer in
+            if let layer = layer as? AnnotationLayer {
+                annotations.append(layer.annotation)
+            } else if let layer = layer as? AnnotationsLayer {
+                annotations += layer.annotations
+            }
+        }
+        
+        return annotations
+    }
 }
 
+public extension MapView {
+    func add(layer: MapLayer) {
+        privateLayers.append(layer)
+        
+        switch layer {
+        case is AnnotationLayer:
+            guard let annotationLayer = layer as? AnnotationLayer else { return }
+            mapView.addAnnotation(annotationLayer.annotation.model)
+            
+        case is AnnotationsLayer:
+            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
+            mapView.addAnnotations(annotationsLayer.annotations.map({ $0.model }))
+            
+        default:
+            break
+        }
+    }
+    
+    func add(layers: [MapLayer]) {
+        layers.forEach { add(layer: $0) }
+    }
+}
 
 extension MapView: MKMapViewDelegate {
+    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let model = annotation as? AnnotationModel,
+              let annotation = getAnnotations().first(where: { $0.model == model })
+        else { return nil }
+        
+        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: model.identifier) {
+            annotationView.annotation = model
+            
+            return annotationView
+        } else {
+            return annotation.renderer as! MKPinAnnotationView
+        }
+    }
+    
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let tileOverlay = overlay as? TileOverlay {
             return MKTileOverlayRenderer(tileOverlay: tileOverlay)
