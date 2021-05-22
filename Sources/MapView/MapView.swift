@@ -7,9 +7,34 @@
 //
 
 import UIKit
+import SwiftUI
 import MapKit
 
+public typealias MapViewAction = ((_ mapView: MapView) -> ())
+
 public class MapView: UIView {
+    
+    public var willChangeRegion: MapViewAction?
+    public var isChangingRegion: MapViewAction?
+    public var didChangeRegion: MapViewAction?
+    
+    public var isZoomEnabled: Bool {
+        get { mapView.isZoomEnabled }
+        set { mapView.isZoomEnabled = newValue }
+    }
+    public var isScrollEnabled: Bool {
+        get { mapView.isScrollEnabled }
+        set { mapView.isScrollEnabled = newValue }
+    }
+    public var isPitchEnabled: Bool {
+        get { mapView.isPitchEnabled }
+        set { mapView.isPitchEnabled = newValue }
+    }
+    public var isRotateEnabled: Bool {
+        get { mapView.isRotateEnabled }
+        set { mapView.isRotateEnabled = newValue }
+    }
+    
     public var zoomLevel: Int {
         get { zoomTileOverlay.zoomLevel }
     }
@@ -18,20 +43,38 @@ public class MapView: UIView {
         get { style.type }
         set { style.type = newValue }
     }
+
+    public var layers: [MapLayer] {
+        get { privateLayers }
+    }
+
+    public var region: MKCoordinateRegion {
+        get { mapView.region }
+        set { mapView.region = newValue}
+    }
     
     public var style: MapStyle = SystemMapStyle() {
         didSet { setupTileOverlays() }
     }
     
-    public var layers: [MapLayer] {
-        get { privateLayers }
+    public var centerCoordinate: Coordinate {
+        get { mapView.centerCoordinate }
+        set { mapView.centerCoordinate = newValue }
     }
     
     private var privateLayers: [MapLayer] = []
     private let mapView = MKMapView(frame: .zero)
     private let zoomTileOverlay = ZoomTileOverlay()
     
-    public init() {
+    public init(
+        willChangeRegion: MapViewAction? = nil,
+        isChangingRegion: MapViewAction? = nil,
+        didChangeRegion: MapViewAction? = nil
+    ) {
+        self.willChangeRegion = willChangeRegion
+        self.isChangingRegion = isChangingRegion
+        self.didChangeRegion = didChangeRegion
+        
         super.init(frame: .zero)
         
         setupView()
@@ -92,6 +135,19 @@ extension MapView: MKMapViewDelegate {
             return MKOverlayRenderer(overlay: overlay)
         }
     }
+    
+    public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        didChangeRegion?(self)
+    }
+    
+    public func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        willChangeRegion?(self)
+    }
+
+    public func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        isChangingRegion?(self)
+    }
+    
 }
 
 extension MapView: UIGestureRecognizerDelegate {
