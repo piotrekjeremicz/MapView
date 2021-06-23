@@ -8,9 +8,19 @@
 import MapKit
 
 public typealias Coordinate = CLLocationCoordinate2D
+public typealias CoordinateRegion = MKCoordinateRegion
 
-public protocol MapModel { }
-public protocol MapLayer { }
+public protocol MapLayer {
+    var identifier: UUID { get }
+}
+
+extension MapLayer where Self: Equatable {
+    var identifier: UUID { return UUID() }
+    
+    public static func ==(lhs: Self, rhs:Self) -> Bool  {
+        lhs.identifier == rhs.identifier
+    }
+}
 
 public protocol MapAnnotationRenderer: Equatable {
     var renderer: UIView { get }
@@ -25,7 +35,6 @@ extension CLLocationCoordinate2D: Equatable {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
 }
-
 
 @resultBuilder
 public struct MapLayerBuilder {

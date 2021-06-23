@@ -138,6 +138,33 @@ private extension MapView {
         
         return annotations
     }
+    
+    func add(annotation: Annotation) {
+        guard !mapView.annotations.contains(where: { annotation.model == $0 as! AnnotationModel }) else { return }
+        //DEMO
+        register(Swift.type(of: annotation.renderer), identifier: annotation.model.identifier)
+        mapView.addAnnotation(annotation.model)
+    }
+    
+    func add(annotations: [Annotation]) {
+        annotations.forEach({ add(annotation: $0) })
+    }
+    
+    func remove(annotation: Annotation) {
+        mapView.removeAnnotation(annotation.model)
+    }
+    
+    func remove(annotations: [Annotation]) {
+        annotations.forEach({ remove(annotation: $0) })
+    }
+    
+    //DEMO
+    func register(_ anyClass: AnyClass, identifier: String) {
+        guard !registeredClasses.keys.contains(identifier) else { return }
+        registeredClasses[identifier] = anyClass
+        
+        mapView.register(anyClass, forAnnotationViewWithReuseIdentifier: identifier)
+    }
 }
 
 public extension MapView {
@@ -161,21 +188,38 @@ public extension MapView {
     func add(layers: [MapLayer]) {
         layers.forEach { add(layer: $0) }
     }
+    
+    func remove(layer: MapLayer) {
+        switch layer {
+        case is AnnotationLayer:
+            guard let annotationLayer = layer as? AnnotationLayer else { return }
+            remove(annotation: annotationLayer.annotation)
+            
+        case is AnnotationsLayer:
+            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
+            remove(annotations: annotationsLayer.annotations)
+            
+        default:
+            break
+        }
+        
+        privateLayers.removeAll(where: { $0.identifier == layer.identifier })
+    }
+    
+    func remove(layers: [MapLayer]) {
+        layers.forEach({ remove(layer: $0) })
+    }
 }
 
 extension MapView: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let model = annotation as? AnnotationModel,
-              let annotation = getAnnotations().first(where: { $0.model == model })
-        else { return nil }
+        guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
+        guard let annotation = annotation as? AnnotationModel else { return nil }
         
-        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: model.identifier) {
-            annotationView.annotation = model
-            
-            return annotationView
-        } else {
-            return annotation.renderer as! MKPinAnnotationView
-        }
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotation.identifier, for: annotation)
+        annotationView.annotation = annotation
+        
+        return annotationView
     }
     
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
