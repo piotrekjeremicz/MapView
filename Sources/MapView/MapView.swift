@@ -48,9 +48,9 @@ public class MapView: UIView {
         get { privateLayers }
     }
 
-    public var region: MKCoordinateRegion {
+    public var region: CoordinateRegion {
         get { mapView.region }
-        set { mapView.region = newValue}
+        set { mapView.region = newValue }
     }
     
     public var style: MapStyle = SystemMapStyle() {
@@ -62,9 +62,32 @@ public class MapView: UIView {
         set { mapView.centerCoordinate = newValue }
     }
     
-    private var privateLayers: [MapLayer] = []
+    public var edges: Map.Edges {
+        let coordinates = [
+            CGPoint(x: self.bounds.minX, y: self.bounds.minY),
+            CGPoint(x: self.bounds.maxX, y: self.bounds.minY),
+            CGPoint(x: self.bounds.minX, y: self.bounds.maxY),
+            CGPoint(x: self.bounds.maxX, y: self.bounds.maxY),
+        ].map({ mapView.convert($0, toCoordinateFrom: self) })
+        
+        return Map.Edges(
+            topLeft: coordinates[0],
+            topRight: coordinates[1],
+            bottomLeft: coordinates[2],
+            bottomRight: coordinates[3]
+        )
+    }
+    
+    public var showsUserLocation: Bool {
+        get { mapView.showsUserLocation }
+        set { mapView.showsUserLocation = newValue }
+    }
+    
     private let mapView = MKMapView(frame: .zero)
     private let zoomTileOverlay = ZoomTileOverlay()
+
+    private var privateLayers: [MapLayer] = []
+    private var registeredClasses: [String: AnyClass] = [:]
     
     public init(
         willChangeRegion: MapViewAction? = nil,
@@ -174,11 +197,10 @@ public extension MapView {
         switch layer {
         case is AnnotationLayer:
             guard let annotationLayer = layer as? AnnotationLayer else { return }
-            mapView.addAnnotation(annotationLayer.annotation.model)
-            
+            add(annotation: annotationLayer.annotation)
         case is AnnotationsLayer:
             guard let annotationsLayer = layer as? AnnotationsLayer else { return }
-            mapView.addAnnotations(annotationsLayer.annotations.map({ $0.model }))
+            add(annotations: annotationsLayer.annotations)
             
         default:
             break
