@@ -54,9 +54,7 @@ public class MapView: UIView {
         set { mapView.region = newValue }
     }
     
-    public var style: MapStyle = SystemMapStyle() {
-        didSet { setupTileOverlays() }
-    }
+    public var style: MapStyle = SystemMapStyle()
     
     public var centerCoordinate: Coordinate {
         get { mapView.centerCoordinate }
@@ -111,16 +109,18 @@ public class MapView: UIView {
         self.willChangeRegion = willChangeRegion
         self.isChangingRegion = isChangingRegion
         self.didChangeRegion = didChangeRegion
-        
+                
         super.init(frame: .zero)
         
         setupView()
+        setupTileOverlays()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setupView()
+        setupTileOverlays()
     }
     
     private var didUpdateConstraints = false
@@ -231,7 +231,6 @@ private extension MapView {
     }
     
     func add(annotation: Annotation) {
-        guard !mapView.annotations.contains(where: { annotation.model == $0 as! AnnotationModel }) else { return }
         //DEMO
         register(Swift.type(of: annotation.renderer), identifier: annotation.model.identifier)
         mapView.addAnnotation(annotation.model)
