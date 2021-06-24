@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import SwiftUI
 import MapKit
+import SwiftUI
+import CoreLocation
 
 public typealias MapViewAction = ((_ mapView: MapView) -> ())
 
@@ -80,7 +81,10 @@ public class MapView: UIView {
     
     public var showsUserLocation: Bool {
         get { mapView.showsUserLocation }
-        set { mapView.showsUserLocation = newValue }
+        set {
+            locationManager.requestWhenInUseAuthorization()
+            mapView.showsUserLocation = newValue
+        }
     }
     
     private let mapView = MKMapView(frame: .zero)
@@ -88,6 +92,16 @@ public class MapView: UIView {
 
     private var privateLayers: [MapLayer] = []
     private var registeredClasses: [String: AnyClass] = [:]
+    
+    private lazy var locationManager: CLLocationManager = {
+        let manager = CLLocationManager()
+        
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.distanceFilter = kCLDistanceFilterNone
+        manager.startUpdatingLocation()
+        
+        return manager
+    }()
     
     public init(
         willChangeRegion: MapViewAction? = nil,
@@ -124,6 +138,60 @@ public class MapView: UIView {
         }
         
         super.updateConstraints()
+    }
+}
+
+public extension MapView {
+    func configure(_ configuration: Map.Configuration) {
+        region = region
+        style = configuration.style
+        showsUserLocation = configuration.showsUserLocation
+        
+        isZoomEnabled = configuration.isZoomEnabled
+        isPitchEnabled = configuration.isPitchEnabled
+        isScrollEnabled = configuration.isScrollEnabled
+        isRotateEnabled = configuration.isRotateEnabled
+    }
+    
+    func add(layer: MapLayer) {
+        privateLayers.append(layer)
+        
+        switch layer {
+        case is AnnotationLayer:
+            guard let annotationLayer = layer as? AnnotationLayer else { return }
+            add(annotation: annotationLayer.annotation)
+        case is AnnotationsLayer:
+            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
+            add(annotations: annotationsLayer.annotations)
+            
+        default:
+            break
+        }
+    }
+    
+    func add(layers: [MapLayer]) {
+        layers.forEach { add(layer: $0) }
+    }
+    
+    func remove(layer: MapLayer) {
+        switch layer {
+        case is AnnotationLayer:
+            guard let annotationLayer = layer as? AnnotationLayer else { return }
+            remove(annotation: annotationLayer.annotation)
+            
+        case is AnnotationsLayer:
+            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
+            remove(annotations: annotationsLayer.annotations)
+            
+        default:
+            break
+        }
+        
+        privateLayers.removeAll(where: { $0.identifier == layer.identifier })
+    }
+    
+    func remove(layers: [MapLayer]) {
+        layers.forEach({ remove(layer: $0) })
     }
 }
 
@@ -190,49 +258,6 @@ private extension MapView {
     }
 }
 
-public extension MapView {
-    func add(layer: MapLayer) {
-        privateLayers.append(layer)
-        
-        switch layer {
-        case is AnnotationLayer:
-            guard let annotationLayer = layer as? AnnotationLayer else { return }
-            add(annotation: annotationLayer.annotation)
-        case is AnnotationsLayer:
-            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
-            add(annotations: annotationsLayer.annotations)
-            
-        default:
-            break
-        }
-    }
-    
-    func add(layers: [MapLayer]) {
-        layers.forEach { add(layer: $0) }
-    }
-    
-    func remove(layer: MapLayer) {
-        switch layer {
-        case is AnnotationLayer:
-            guard let annotationLayer = layer as? AnnotationLayer else { return }
-            remove(annotation: annotationLayer.annotation)
-            
-        case is AnnotationsLayer:
-            guard let annotationsLayer = layer as? AnnotationsLayer else { return }
-            remove(annotations: annotationsLayer.annotations)
-            
-        default:
-            break
-        }
-        
-        privateLayers.removeAll(where: { $0.identifier == layer.identifier })
-    }
-    
-    func remove(layers: [MapLayer]) {
-        layers.forEach({ remove(layer: $0) })
-    }
-}
-
 extension MapView: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
@@ -265,7 +290,6 @@ extension MapView: MKMapViewDelegate {
     public func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
         isChangingRegion?(self)
     }
-    
 }
 
 extension MapView: UIGestureRecognizerDelegate {
