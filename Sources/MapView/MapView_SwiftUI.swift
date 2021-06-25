@@ -22,7 +22,7 @@ public struct Map: UIViewRepresentable {
     public init(
         configuration: Configuration,
         region: Binding<MKCoordinateRegion>,
-        @MapLayerBuilder _ layers: () -> [MapLayer],
+        @LayerBuilder _ layers: () -> [MapLayer],
         willChangeRegion: MapViewAction? = nil,
         isChangingRegion: MapViewAction? = nil,
         didChangeRegion: MapViewAction? = nil
@@ -52,8 +52,6 @@ public struct Map: UIViewRepresentable {
     }
 }
 
-
-
 private extension Map {
     func configure(_ mapView: MapView, with configuration: Configuration, context: Context) {
         mapView.region = region
@@ -73,38 +71,5 @@ private extension Map {
     func update(_ mapView: MapView) {
         mapView.remove(layers: mapView.layers)
         mapView.add(layers: layers)
-    }
-}
-
-public extension Map {
-    struct Configuration {
-        let style: MapStyle
-        let showsUserLocation: Bool
-        let userTrackingMode: Bool
-        
-        let isZoomEnabled: Bool
-        let isScrollEnabled: Bool
-        let isPitchEnabled: Bool
-        let isRotateEnabled: Bool
-        
-        public init(
-            style: MapStyle = SystemMapStyle(),
-            showsUserLocation: Bool = false,
-            userTrackingMode: Bool = false,
-            
-            isZoomEnabled: Bool = false,
-            isScrollEnabled: Bool = false,
-            isPitchEnabled: Bool = false,
-            isRotateEnabled: Bool = false
-        ) {
-            self.style = style
-            self.showsUserLocation = showsUserLocation
-            self.userTrackingMode = userTrackingMode
-            
-            self.isZoomEnabled = isZoomEnabled
-            self.isPitchEnabled = isPitchEnabled
-            self.isScrollEnabled = isScrollEnabled
-            self.isRotateEnabled = isRotateEnabled
-        }
     }
 }

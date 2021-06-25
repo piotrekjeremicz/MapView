@@ -1,5 +1,5 @@
 //
-//  EmptyTileOverlay.swift
+//  ZoomTileOverlay.swift
 //  MapView
 //
 //  Created by Piotrek on 04/12/2020.

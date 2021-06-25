@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Annotation.swift
 //  
 //
 //  Created by Piotrek on 20/05/2021.
@@ -7,30 +7,12 @@
 
 import MapKit
 
-public final class AnnotationModel: NSObject, MKAnnotation {
-    public let identifier: String
-    
-    public var title: String?
-    public var subtitle: String?
-    public var coordinate: Coordinate
-    
-    public init(_ identifier: String, title: String? = nil, subtitle: String? = nil, coordinate: Coordinate) {
-        self.identifier = identifier
-        self.title = title
-        self.subtitle = subtitle
-        self.coordinate = coordinate
-    }
-    
-    static func ==(lhs: AnnotationModel, rhs: AnnotationModel) -> Bool {
-        return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle && lhs.coordinate == rhs.coordinate
-    }
-}
-
 public struct Annotation: MapAnnotationRenderer {
     
     public enum Style: String {
         case pin = "Pin"
         case marker = "Marker"
+        case custom = "Custom"
     }
     
     public let style: Style
@@ -48,8 +30,19 @@ public struct Annotation: MapAnnotationRenderer {
         self.model = AnnotationModel("\(style.rawValue)AnnotationView", title: title, subtitle: subtitle, coordinate: coordinate)
     }
     
+    private var view: UIView?
     
-    public var renderer: UIView {
+    public init(identifier: String, coordinate: Coordinate, view: UIView) {
+        self.view = view
+        self.style = .custom
+        self.title = nil
+        self.subtitle = nil
+        self.coordinate = coordinate
+        
+        self.model = AnnotationModel("\(style.rawValue)AnnotationView", coordinate: coordinate)
+    }
+    
+    public var renderer: MKAnnotationView {
         switch style {
         case .pin:
             let pin = MKPinAnnotationView(annotation: model, reuseIdentifier: model.identifier)
@@ -61,26 +54,14 @@ public struct Annotation: MapAnnotationRenderer {
             marker.animatesWhenAdded = false
             
             return marker
+        case .custom:
+            guard let view = view else { return MKAnnotationView() }
+            
+            return MKAnnotationView()
         }
     }
 }
 
-public struct AnnotationLayer: MapLayer {
-    public var identifier: UUID = UUID()
-    
-    let annotation: Annotation
-    
-    public init(annotation: Annotation) {
-        self.annotation = annotation
-    }
-}
 
-public struct AnnotationsLayer: MapLayer {
-    public var identifier: UUID = UUID()
-    
-    let annotations: [Annotation]
-    
-    public init(annotations: [Annotation]) {
-        self.annotations = annotations
-    }
-}
+
+
