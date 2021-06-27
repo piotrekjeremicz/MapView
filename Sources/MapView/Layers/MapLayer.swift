@@ -8,12 +8,12 @@
 import MapKit
 
 public protocol MapLayer {
-    var identifier: UUID { get }
+    var identifier: String { get }
+    
+    mutating func update(with layer: MapLayer)
 }
 
 extension MapLayer where Self: Equatable {
-    var identifier: UUID { return UUID() }
-    
     public static func ==(lhs: Self, rhs:Self) -> Bool  {
         lhs.identifier == rhs.identifier
     }
