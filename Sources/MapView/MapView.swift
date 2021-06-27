@@ -173,6 +173,18 @@ public extension MapView {
         layers.forEach { add(layer: $0) }
     }
     
+    func put(layer: MapLayer) {
+        if var existingLayer = privateLayers.first(where: { $0.identifier == layer.identifier }) {
+            existingLayer.update(with: layer)
+        } else {
+            add(layer: layer)
+        }
+    }
+    
+    func put(layers: [MapLayer]) {
+        layers.forEach { put(layer: $0) }
+    }
+    
     func remove(layer: MapLayer) {
         switch layer {
         case is AnnotationLayer:
