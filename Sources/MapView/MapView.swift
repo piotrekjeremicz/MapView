@@ -288,8 +288,8 @@ extension MapView: MKMapViewDelegate {
         guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
         guard let annotation = annotation as? AnnotationModel else { return nil }
         
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotation.identifier, for: annotation)
-        annotationView.annotation = annotation
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotation.identifier)
+        annotationView?.annotation = annotation
         
         return annotationView
     }
