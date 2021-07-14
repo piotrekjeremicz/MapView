@@ -9,6 +9,10 @@ import MapKit
 
 public struct Annotation: MapAnnotationRenderer {
     
+    public static func == (lhs: Annotation, rhs: Annotation) -> Bool {
+        lhs.title == rhs.title && lhs.subtitle == rhs.subtitle && lhs.coordinate == rhs.coordinate
+    }
+    
     public enum Style: String {
         case pin = "Pin"
         case marker = "Marker"
@@ -30,34 +34,28 @@ public struct Annotation: MapAnnotationRenderer {
         self.model = AnnotationModel("\(style.rawValue)AnnotationView", title: title, subtitle: subtitle, coordinate: coordinate)
     }
     
-    private var view: UIView?
+    private var view: AnyClass?
     
-    public init(identifier: String, coordinate: Coordinate, view: UIView) {
+    public init(identifier: String, title: String? = nil, subtitle: String? = nil, coordinate: Coordinate, view: AnyClass) {
         self.view = view
         self.style = .custom
-        self.title = nil
-        self.subtitle = nil
+        self.title = title
+        self.subtitle = subtitle
         self.coordinate = coordinate
         
-        self.model = AnnotationModel("\(style.rawValue)AnnotationView", coordinate: coordinate)
+        self.model = AnnotationModel("\(identifier)AnnotationView", title: title, subtitle: subtitle, coordinate: coordinate)
     }
     
-    public var renderer: MKAnnotationView {
+    public var renderer: AnyClass? {
         switch style {
         case .pin:
-            let pin = MKPinAnnotationView(annotation: model, reuseIdentifier: model.identifier)
-            pin.animatesDrop = false
-            
-            return pin
+            return MKPinAnnotationView.self
         case .marker:
-            let marker = MKMarkerAnnotationView(annotation: model, reuseIdentifier: model.identifier)
-            marker.animatesWhenAdded = false
-            
-            return marker
+            return MKMarkerAnnotationView.self
         case .custom:
-            guard let view = view else { return MKAnnotationView() }
-            
-            return MKAnnotationView()
+            guard let view = view else { return nil }
+
+            return view
         }
     }
 }
