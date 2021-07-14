@@ -8,7 +8,7 @@
 import MapKit
 
 public protocol MapAnnotationRenderer: Equatable {
-    var renderer: MKAnnotationView { get }
+    var renderer: AnyClass? { get }
 }
 
 public protocol MapOverlayRenderer {
