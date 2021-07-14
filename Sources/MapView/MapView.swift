@@ -85,6 +85,20 @@ public class MapView: UIView {
         }
     }
     
+    public var userLocation: Coordinate? {
+        get {
+            if showsUserLocation {
+                if let userLocation = mapView.annotations.first(where: { $0 is MKUserLocation }) as? MKUserLocation {
+                    return userLocation.coordinate
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        }
+    }
+    
     private let mapView = MKMapView(frame: .zero)
     private let zoomTileOverlay = ZoomTileOverlay()
 
