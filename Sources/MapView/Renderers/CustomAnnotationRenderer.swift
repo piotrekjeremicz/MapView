@@ -7,6 +7,17 @@
 
 import MapKit
 
-public class CustomAnnotationRenderer: MKAnnotationView {
-    
+
+public typealias AnnotationView = MKAnnotationView
+
+public protocol CustomAnnotationView {
+        
+    var annotationView: UIView { get }
+}
+
+
+extension AnnotationView: CustomAnnotationView {
+    @objc open var annotationView: UIView {
+        UIView()
+    }
 }
