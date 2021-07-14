@@ -14,6 +14,8 @@ public final class AnnotationModel: NSObject, MKAnnotation {
     public var subtitle: String?
     public var coordinate: Coordinate
     
+    public override var description: String { "Annotation Model: { identifier: \(identifier), title: \(title), subtitle: \(subtitle), coordinate: \(coordinate) }"}
+    
     public init(_ identifier: String, title: String? = nil, subtitle: String? = nil, coordinate: Coordinate) {
         self.identifier = identifier
         self.title = title
